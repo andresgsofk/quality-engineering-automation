@@ -1,0 +1,350 @@
+// ==============================================
+// CONFIGURACIÓN DE BUILD DE GRADLE PARA SERENITY
+// ==============================================
+
+plugins {
+
+    id "java"
+
+    id "idea"
+
+    id "net.serenity-bdd.serenity-gradle-plugin" version "4.2.16"
+}
+
+// ==============================================
+// CONFIGURACIÓN JAVA 21
+// ==============================================
+
+java {
+
+    toolchain {
+
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+// ==============================================
+// PROYECTO
+// ==============================================
+
+group = 'com.pichincha'
+
+version = '1.0-SNAPSHOT'
+
+// ==============================================
+// VARIABLES GLOBALES
+// ==============================================
+
+ext {
+
+    serenityVersion = '4.2.16'
+
+    junitVersion = '4.13.2'
+
+    slf4jVersion = '2.0.13'
+}
+
+// ==============================================
+// CODIFICACIÓN
+// ==============================================
+
+tasks.withType(JavaCompile).configureEach {
+
+    options.encoding = 'UTF-8'
+}
+
+tasks.withType(Test).configureEach {
+
+    systemProperty "file.encoding", "UTF-8"
+}
+
+// ==============================================
+// REPOSITORIOS
+// ==============================================
+
+repositories {
+
+    mavenCentral()
+}
+
+// ==============================================
+// DEPENDENCIAS
+// ==============================================
+
+dependencies {
+
+    // ==========================================
+    // SERENITY BDD + SCREENPLAY + CUCUMBER
+    // ==========================================
+
+    implementation "net.serenity-bdd:serenity-core:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-junit:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-cucumber:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-screenplay:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-screenplay-webdriver:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-ensure:${serenityVersion}"
+
+    implementation "net.serenity-bdd:serenity-rest-assured:${serenityVersion}"
+
+    // ==========================================
+    // JUNIT 4
+    // ==========================================
+
+    testImplementation "junit:junit:${junitVersion}"
+
+    // ==========================================
+    // LOGGING
+    // ==========================================
+
+    implementation "org.slf4j:slf4j-nop:${slf4jVersion}"
+
+    // ==========================================
+    // ASSERTIONS
+    // ==========================================
+
+    testImplementation 'org.hamcrest:hamcrest:2.2'
+
+    testImplementation 'org.assertj:assertj-core:3.24.2'
+
+    // ==========================================
+    // UTILIDADES
+    // ==========================================
+
+    implementation 'org.apache.commons:commons-lang3:3.14.0'
+
+    implementation 'com.github.javafaker:javafaker:1.0.2'
+
+    // ==========================================
+    // API TESTING
+    // ==========================================
+
+    implementation 'io.rest-assured:rest-assured:5.5.0'
+
+    implementation 'io.rest-assured:json-schema-validator:5.5.0'
+
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.17.2'
+}
+
+// ==============================================
+// CONFIGURACIÓN GLOBAL DE TESTS
+// ==============================================
+
+tasks.withType(Test).configureEach {
+
+    useJUnit()
+
+    // ==========================================
+    // SYSTEM PROPERTIES
+    // ==========================================
+
+    systemProperties System.getProperties()
+
+    // ==========================================
+    // CONFIGURACIÓN DE PARALELISMO
+    // ==========================================
+
+    maxParallelForks = 1
+
+    forkEvery = 1
+
+    // ==========================================
+    // MEMORIA JVM
+    // ==========================================
+
+    minHeapSize = "512m"
+
+    maxHeapSize = "2048m"
+
+    // ==========================================
+    // OPTIMIZACIÓN JVM
+    // ==========================================
+
+    jvmArgs = [
+
+            "-XX:+HeapDumpOnOutOfMemoryError",
+
+            "-XX:+UseG1GC",
+
+            "-XX:MaxMetaspaceSize=512m",
+
+            "-Dfile.encoding=UTF-8"
+    ]
+
+    // ==========================================
+    // LOGGING DE EJECUCIÓN
+    // ==========================================
+
+    testLogging {
+
+        events "PASSED", "FAILED", "SKIPPED"
+
+        exceptionFormat "FULL"
+
+        showExceptions = true
+
+        showCauses = true
+
+        showStackTraces = true
+
+        showStandardStreams = false
+    }
+
+    // ==========================================
+    // EJECUCIÓN SIEMPRE LIMPIA
+    // ==========================================
+
+    outputs.upToDateWhen { false }
+}
+
+// ==============================================
+// CONFIGURACIÓN SERENITY
+// ==============================================
+
+serenity {
+
+    // ==========================================
+    // FEATURES BASE
+    // ==========================================
+
+    requirementsBaseDir = ["src/test/resources/features"]
+
+    // ==========================================
+    // REPORTES
+    // ==========================================
+
+    reports = [
+
+            "single-page-html",
+
+            "html"
+    ]
+}
+
+// ==============================================
+// CONFIGURACIÓN CUCUMBER PARALELO
+// ==============================================
+
+test {
+
+    // ==========================================
+    // SERENITY SETTINGS
+    // ==========================================
+
+    systemProperty "serenity.console.colors", "true"
+
+    systemProperty "serenity.logging", "VERBOSE"
+
+    systemProperty "webdriver.autodownload", "true"
+
+    // ==========================================
+    // ENTORNO POR DEFECTO
+    // ==========================================
+
+    systemProperty "environment",
+            System.getProperty("environment", "qa")
+}
+
+// ==============================================
+// TASKS PERSONALIZADAS
+// ==============================================
+
+tasks.register('smokeTest', Test) {
+
+    useJUnit()
+
+    description = "Ejecuta la suite Smoke"
+
+    group = "verification"
+
+    systemProperty "cucumber.filter.tags", "@smoke"
+
+    systemProperty "environment",
+            System.getProperty("environment", "qa")
+
+    finalizedBy aggregate
+}
+
+tasks.register('regressionTest', Test) {
+
+    useJUnit()
+
+    description = "Ejecuta la suite Regression"
+
+    group = "verification"
+
+    systemProperty "cucumber.filter.tags", "@regression"
+
+    systemProperty "environment",
+            System.getProperty("environment", "qa")
+
+    finalizedBy aggregate
+}
+
+tasks.register('criticalTest', Test) {
+
+    useJUnit()
+
+    description = "Ejecuta la suite Critical"
+
+    group = "verification"
+
+    systemProperty "cucumber.filter.tags", "@critical"
+
+    systemProperty "environment",
+            System.getProperty("environment", "qa")
+
+    finalizedBy aggregate
+}
+
+// ==============================================
+// CONFIGURACIÓN DE EJECUCIÓN
+// ==============================================
+
+gradle.startParameter.continueOnFailure = true
+
+test.finalizedBy(aggregate)
+// ==============================================
+// TAREAS DE EJECUCIÓN POR CAPA
+// ==============================================
+
+tasks.register('webTest', Test) {
+    description = 'Ejecuta únicamente los escenarios WEB E2E del simulador.'
+    group = 'verification'
+    include '**/WebTestRunner.class'
+    systemProperty 'cucumber.filter.tags', System.getProperty('cucumber.filter.tags', '@web')
+    systemProperties System.getProperties()
+    useJUnit()
+}
+
+tasks.register('apiTest', Test) {
+    description = 'Ejecuta únicamente los escenarios API de Fake Store.'
+    group = 'verification'
+    include '**/ApiTestRunner.class'
+    systemProperty 'cucumber.filter.tags', System.getProperty('cucumber.filter.tags', '@api')
+    systemProperty 'api.base.url', System.getProperty('api.base.url', 'https://fakestoreapi.com')
+    systemProperties System.getProperties()
+    useJUnit()
+}
+
+
+// ==============================================
+// MENSAJE FINAL DE REPORTE SERENITY
+// ==============================================
+tasks.withType(Test).configureEach {
+    finalizedBy aggregate
+    doLast {
+        def reportPath = file("target/site/serenity/index.html").absolutePath
+        println ""
+        println "============================================================"
+        println "✅ Ejecución finalizada"
+        println "📊 SERENITY_REPORT_PATH: ${reportPath}"
+        println "🌐 Abrir reporte HTML: file:///${reportPath.replace('\\', '/')}"
+        println "============================================================"
+        println ""
+    }
+}

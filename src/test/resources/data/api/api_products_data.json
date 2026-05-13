@@ -1,0 +1,47 @@
+{
+  "producto_valido": {
+    "productId": 1,
+    "expectedStatusCode": 200
+  },
+  "categoria_electronics": {
+    "category": "electronics",
+    "expectedStatusCode": 200
+  },
+  "crear_producto_valido": {
+    "expectedStatusCode": 201,
+    "payload": {
+      "title": "QE SDET Automation Product",
+      "price": 129.99,
+      "description": "Producto creado desde pruebas automatizadas API con Serenity Rest Assured",
+      "image": "https://fakestoreapi.com/img/qe-sdet-product.png",
+      "category": "electronics"
+    }
+  },
+  "actualizar_producto_valido": {
+    "productId": 7,
+    "expectedStatusCode": 200,
+    "payload": {
+      "title": "QE SDET Updated Product",
+      "price": 199.99,
+      "description": "Producto actualizado completamente desde prueba automatizada API",
+      "image": "https://fakestoreapi.com/img/qe-sdet-updated-product.png",
+      "category": "electronics"
+    }
+  },
+  "producto_inexistente": {
+    "productId": 999999,
+    "expectedStatusCode": 200
+  },
+  "categoria_invalida": {
+    "category": "categoria-inexistente",
+    "expectedStatusCode": 200
+  },
+  "payload_vacio": {
+    "expectedStatusCode": 201,
+    "payload": {}
+  },
+  "limite_productos": {
+    "limit": 5,
+    "expectedStatusCode": 200
+  }
+}

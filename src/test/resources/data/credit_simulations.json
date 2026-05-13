@@ -1,0 +1,38 @@
+{
+  "preciso_base": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "24000",
+    "montoVivienda": null,
+    "term": "8 meses"
+  },
+  "vivienda_base": {
+    "tipoCredito": "HIPOTECARIO VIVIENDA",
+    "montoPrestamo": "50000",
+    "montoVivienda": "12000",
+    "term": "3 años y 4 meses"
+  },
+  "preciso_monto_30000": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "30000",
+    "montoVivienda": null,
+    "term": "8 meses"
+  },
+  "preciso_monto_45000": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "45000",
+    "montoVivienda": null,
+    "term": "8 meses"
+  },
+  "preciso_comparacion": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "24000",
+    "montoVivienda": null,
+    "term": "8 meses"
+  },
+  "vivienda_comparacion": {
+    "tipoCredito": "HIPOTECARIO VIVIENDA",
+    "montoPrestamo": "50000",
+    "montoVivienda": "24000",
+    "term": "3 años y 4 meses"
+  }
+}

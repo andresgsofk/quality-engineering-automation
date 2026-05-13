@@ -1,0 +1,42 @@
+{
+  "preciso_monto_vacio": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "",
+    "montoVivienda": null,
+    "term": "8 meses",
+    "mensajeEsperado": "Debes ingresar esta información.",
+    "campoValidacion": "monto_prestamo"
+  },
+  "preciso_monto_minimo": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "299",
+    "montoVivienda": null,
+    "term": "8 meses",
+    "mensajeEsperado": "Tu monto debe ser mayor a 300",
+    "campoValidacion": "monto_prestamo"
+  },
+  "preciso_monto_maximo": {
+    "tipoCredito": "PRECISO",
+    "montoPrestamo": "60001",
+    "montoVivienda": null,
+    "term": "8 meses",
+    "mensajeEsperado": "Tu monto debe ser menor a 60000",
+    "campoValidacion": "monto_prestamo"
+  },
+  "vivienda_monto_vacio": {
+    "tipoCredito": "HIPOTECARIO VIVIENDA",
+    "montoPrestamo": "",
+    "montoVivienda": "",
+    "term": "3 años y 4 meses",
+    "mensajeEsperado": "Debes ingresar esta información.",
+    "campoValidacion": "monto_prestamo"
+  },
+  "vivienda_monto_minimo": {
+    "tipoCredito": "HIPOTECARIO VIVIENDA",
+    "montoPrestamo": "299",
+    "montoVivienda": "10000",
+    "term": "3 años y 4 meses",
+    "mensajeEsperado": "Tu monto debe ser mayor a 300",
+    "campoValidacion": "monto_prestamo"
+  }
+}
